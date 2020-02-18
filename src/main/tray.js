@@ -20,9 +20,17 @@ function generateConfigSubmenus (configs, selectedIndex) {
     return {
       label: `${groupedConfigs.some(config => config.checked) ? '● ' : ''}${key}`,
       submenu: groupedConfigs.map(config => {
+        let label = `${config.remarks}(${config.server}:${config.server_port})`
+        if (config.delay !== undefined) {
+          if (config.delay === null) {
+            label = `[超时]${label}`
+          } else {
+            label = `[${config.delay}ms]${label}`
+          }
+        }
         return {
           id: config.id,
-          label: `${config.remarks}(${config.server}:${config.server_port})`,
+          label,
           type: 'checkbox',
           checked: config.checked,
           click (e) {
@@ -42,6 +50,7 @@ function generateConfigSubmenus (configs, selectedIndex) {
     submenus.push({ label: 'none', enabled: false })
   }
   submenus.push({ type: 'separator' })
+  submenus.push({ label: '服务器测速', click: () => handler.tcpPing(configs) })
   submenus.push({ label: '编辑服务器', click: handler.showManagePanel })
   submenus.push({ label: '订阅管理', click: handler.showSubscribes })
   submenus.push({ label: '更新订阅服务器', click: handler.updateSubscribes })

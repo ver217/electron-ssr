@@ -39,12 +39,12 @@ function release () {
     case 'darwin':
       targets = Platform.MAC.createTarget()
       extraFiles.push({ from: 'src/lib/proxy_conf_helper', to: './' })
-      files = files.concat(winImages)
+      files = files.concat(macImages)
       break
     case 'win32':
       targets = Platform.WINDOWS.createTarget()
       extraFiles.push({ from: 'src/lib/sysproxy.exe', to: './' })
-      files = files.concat(macImages)
+      files = files.concat(winImages)
       break
     case 'linux':
       targets = Platform.LINUX.createTarget()
@@ -118,6 +118,7 @@ function release () {
           'pacman',
           'appImage'
         ],
+        depends: ['minizip', 'http-parser', 're2'],
         desktop: {
           Name: 'electron-ssr',
           Encoding: 'UTF-8',

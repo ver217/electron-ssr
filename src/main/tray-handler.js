@@ -13,6 +13,7 @@ import { showNotification } from './notification'
 import * as events from '../shared/events'
 import { loadConfigsFromString } from '../shared/ssr'
 import { chooseFile, chooseSavePath } from '../shared/dialog'
+import { ping } from './ping'
 
 // 切换启用状态
 export function toggleEnable () {
@@ -28,6 +29,20 @@ export function toggleProxy (mode) {
 // 更改选中的ssr配置
 export function switchConfig (index) {
   updateAppConfig({ index })
+}
+
+// TCP Ping 测速
+export async function tcpPing (configs) {
+  for (const config of configs) {
+    const delay = await ping(config.server, config.server_port)
+    if (delay.min === undefined) {
+      config.delay = null
+    } else {
+      config.delay = parseInt(delay.min)
+    }
+  }
+  updateAppConfig({ configs })
+  showNotification('测速完成')
 }
 
 // 更新pac
